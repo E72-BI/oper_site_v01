@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debug Image Switching</title>
+    <link rel="stylesheet" href="css/style-harmonizado.css">
+    <link rel="stylesheet" href="css/mobile-enhancements.css">
+    <style>
+        .debug-section {
+            padding: 20px;
+            text-align: center;
+            background-color: #f0f0f0;
+        }
+        .debug-image {
+            max-width: 100%;
+            height: auto;
+            margin: 10px 0;
+            border: 3px solid;
+            border-radius: 8px;
+        }
+        .desktop-image {
+            border-color: blue;
+        }
+        .mobile-image {
+            border-color: red;
+        }
+        .info {
+            background-color: #e0e0e0;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="debug-section">
+        <h1>Debug Image Switching Test</h1>
+        <div class="info">
+            <p><strong>Blue border</strong> = Desktop image (rapaz001.png)</p>
+            <p><strong>Red border</strong> = Mobile image (faq_rapaz_001.png)</p>
+            <p>Only one image should be visible at a time!</p>
+        </div>
+        
+        <div class="image-section">
+            <div class="container">
+                <div class="image-content">
+                    <img src="images/rapaz001.png" alt="Desktop Image" class="debug-image desktop-image">
+                    <img src="images/faq_rapaz_001.png" alt="Mobile Image" class="debug-image mobile-image">
+                </div>
+            </div>
+        </div>
+        
+        <div class="info">
+            <p>Resize your browser window to test the image switching:</p>
+            <p><strong>Wide screen</strong> (>768px): Should show blue bordered desktop image</p>
+            <p><strong>Narrow screen</strong> (≤768px): Should show red bordered mobile image</p>
+        </div>
+    </div>
+</body>
+</html>
