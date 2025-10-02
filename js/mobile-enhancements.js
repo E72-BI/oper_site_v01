@@ -76,37 +76,53 @@ document.addEventListener('DOMContentLoaded', function() {
     // Enhanced accordion for mobile
     const accordionHeaders = document.querySelectorAll('.accordion-header');
     accordionHeaders.forEach(header => {
-        // Add touch feedback
+        if (header.dataset.boundMobile === '1') return; // evita bind duplicado no mobile
+        header.dataset.boundMobile = '1';
+
+        const content = header.nextElementSibling;
+        if (content) {
+            content.style.maxHeight = 0;
+            content.setAttribute('aria-hidden', 'true');
+        }
+        header.setAttribute('aria-expanded', 'false');
+
+        // Touch feedback
         header.addEventListener('touchstart', function() {
             this.classList.add('touch-ripple');
         });
-        
         header.addEventListener('touchend', function() {
-            setTimeout(() => {
-                this.classList.remove('touch-ripple');
-            }, 300);
+            setTimeout(() => this.classList.remove('touch-ripple'), 300);
         });
-        
-        // Enhanced click handling for mobile
+
+        // Toggle com altura dinâmica
         header.addEventListener('click', function(e) {
             e.preventDefault();
-            const content = this.nextElementSibling;
-            
-            // Close all other accordions
+            const isActive = header.classList.contains('active');
+            const currentContent = header.nextElementSibling;
+
+            // Fecha outros
             accordionHeaders.forEach(otherHeader => {
                 if (otherHeader !== header) {
                     otherHeader.classList.remove('active');
+                    otherHeader.setAttribute('aria-expanded', 'false');
                     const otherContent = otherHeader.nextElementSibling;
                     if (otherContent) {
                         otherContent.classList.remove('active');
+                        otherContent.style.maxHeight = 0;
+                        otherContent.setAttribute('aria-hidden', 'true');
                     }
                 }
             });
-            
-            // Toggle current accordion
-            this.classList.toggle('active');
-            if (content) {
-                content.classList.toggle('active');
+
+            // Alterna atual
+            header.classList.toggle('active');
+            header.setAttribute('aria-expanded', header.classList.contains('active') ? 'true' : 'false');
+            if (currentContent) {
+                currentContent.classList.toggle('active');
+                currentContent.style.maxHeight = header.classList.contains('active')
+                    ? currentContent.scrollHeight + 'px'
+                    : 0;
+                currentContent.setAttribute('aria-hidden', header.classList.contains('active') ? 'false' : 'true');
             }
         });
     });

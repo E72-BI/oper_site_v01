@@ -78,24 +78,43 @@ document.addEventListener('DOMContentLoaded', function() {
     const accordionHeaders = document.querySelectorAll('.accordion-header');
     
     accordionHeaders.forEach(header => {
+        if (header.dataset.bound === '1') return; // evita bind duplicado
+        header.dataset.bound = '1';
+
+        const content = header.nextElementSibling;
+        if (content) {
+            content.style.maxHeight = 0;
+            content.setAttribute('aria-hidden', 'true');
+        }
+        header.setAttribute('aria-expanded', 'false');
+        
         header.addEventListener('click', function() {
-            const content = this.nextElementSibling;
-            const isActive = this.classList.contains('active');
-            
-            // Close all accordion items
+            const isActive = header.classList.contains('active');
+            const currentContent = header.nextElementSibling;
+
+            // Fecha todos os outros
             accordionHeaders.forEach(h => {
-                h.classList.remove('active');
-                if (h.nextElementSibling) {
-                    h.nextElementSibling.classList.remove('active');
+                if (h !== header) {
+                    h.classList.remove('active');
+                    h.setAttribute('aria-expanded', 'false');
+                    const c = h.nextElementSibling;
+                    if (c) {
+                        c.classList.remove('active');
+                        c.style.maxHeight = 0;
+                        c.setAttribute('aria-hidden', 'true');
+                    }
                 }
             });
-            
-            // Open clicked item if it wasn't active
-            if (!isActive) {
-                this.classList.add('active');
-                if (content) {
-                    content.classList.add('active');
-                }
+
+            // Alterna atual com altura dinâmica
+            header.classList.toggle('active');
+            header.setAttribute('aria-expanded', header.classList.contains('active') ? 'true' : 'false');
+            if (currentContent) {
+                currentContent.classList.toggle('active');
+                currentContent.style.maxHeight = header.classList.contains('active')
+                    ? currentContent.scrollHeight + 'px'
+                    : 0;
+                currentContent.setAttribute('aria-hidden', header.classList.contains('active') ? 'false' : 'true');
             }
         });
     });
